@@ -118,6 +118,8 @@ class GoveeBluetoothLight(LightEntity):
         match self._type:
             case "H6053":
                 return [round(brightness / 2.55)]
+            case "H6127":
+                return [brightness]
             case _:
                 return [brightness]
 
