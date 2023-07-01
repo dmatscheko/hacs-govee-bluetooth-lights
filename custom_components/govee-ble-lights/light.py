@@ -1,11 +1,7 @@
 from __future__ import annotations
 from typing import Any
 
-import logging
-_LOGGER = logging.getLogger(__name__)
-
 from enum import IntEnum
-import time
 import bleak_retry_connector
 
 from bleak import BleakClient
@@ -71,16 +67,19 @@ class GoveeBluetoothLight(LightEntity):
 
     async def async_turn_on(self, **kwargs) -> None:
         await self._sendBluetoothData(LedCommand.POWER, [0x1])
-        self._state = True
 
         if ATTR_BRIGHTNESS in kwargs:
             brightness = kwargs.get(ATTR_BRIGHTNESS, 255)
-            self._brightness = brightness
             await self._sendBluetoothData(LedCommand.BRIGHTNESS, self._get_brightness_payload(brightness))
+            self._brightness = brightness
 
         if ATTR_RGB_COLOR in kwargs:
             red, green, blue = kwargs.get(ATTR_RGB_COLOR)
             await self._sendBluetoothData(LedCommand.COLOR, self._get_color_payload(red, green, blue))
+            self._attr_rgb_color = (red, green, blue)
+        
+        self._state = True
+
 
     async def async_turn_off(self, **kwargs) -> None:
         await self._sendBluetoothData(LedCommand.POWER, [0x0])
