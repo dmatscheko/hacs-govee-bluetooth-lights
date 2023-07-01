@@ -78,7 +78,7 @@ class GoveeConfigFlow(ConfigFlow, domain=DOMAIN):
             step_id="user",
             data_schema=vol.Schema(
                 {
-                    vol.Required("type"): vol.In(["Other", "H6053"]),
+                    vol.Required("type"): vol.In(["Other", "H6053", "H6127"]),
                     vol.Required(CONF_ADDRESS): vol.In(self._discovered_devices)
                 }
             ),

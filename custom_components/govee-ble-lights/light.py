@@ -125,5 +125,7 @@ class GoveeBluetoothLight(LightEntity):
         match self._type:
             case "H6053":
                 return [0x15, 0x01, red, green, blue, 0, 0, 0, 0, 0, 0xff, 0x0f]
+            case "H6127":
+                return [LedMode.MANUAL, red, green, blue]
             case _:
                 return [red, green, blue]
