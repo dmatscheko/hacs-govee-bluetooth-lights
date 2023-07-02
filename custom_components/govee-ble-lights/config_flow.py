@@ -31,9 +31,6 @@ class GoveeConfigFlow(ConfigFlow, domain=DOMAIN):
         await self.async_set_unique_id(discovery_info.address)
         self._abort_if_unique_id_configured()
         self._discovery_info = discovery_info
-        self.devices = [
-            f"{discovery_info.address} ({discovery_info.name})"
-        ]
         return await self.async_step_bluetooth_confirm()
 
     async def async_step_bluetooth_confirm(
