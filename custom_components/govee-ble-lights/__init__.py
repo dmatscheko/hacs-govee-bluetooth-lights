@@ -1,4 +1,4 @@
-from __future__ import annotations
+`from __future__ import annotations
 
 from homeassistant.components import bluetooth
 from homeassistant.config_entries import ConfigEntry
@@ -29,14 +29,13 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                 Enable the bluetooth integration or ensure an esphome device \
                 is running as a bluetooth proxy"
             )
-        raise ConfigEntryNotReady(
-            f"Could not find LED BLE device with address {address}"
-        )
+        else:
+            raise ConfigEntryNotReady(
+                f"Could not find LED BLE device with address {address}"
+            )
 
     hass.data[DOMAIN][entry.entry_id] = Hub(hass, address, entry.data.get("type"))
-    hass.async_create_task(
-        hass.config_entries.async_forward_entry_setup(entry, PLATFORMS)
-    )
+    await hass.config_entries.async_forward_entry_setup(entry, PLATFORMS)
     return True
 
 
