@@ -42,7 +42,10 @@ class GoveeConfigFlow(ConfigFlow, domain=DOMAIN):
         discovery_info = self._discovery_info
         title = discovery_info.name
         if user_input is not None:
-            return self.async_create_entry(title=title, data={})
+            return self.async_create_entry(title=title, data={
+                "type": user_input["type"]
+            }
+        )
 
         self._set_confirm_only()
         placeholders = {"name": title}
