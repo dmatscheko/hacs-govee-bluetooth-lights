@@ -13,6 +13,7 @@ from homeassistant.const import CONF_ADDRESS
 from homeassistant.data_entry_flow import FlowResult
 
 from .const import DOMAIN
+from .const import DEVICE_TYPES
 
 
 class GoveeConfigFlow(ConfigFlow, domain=DOMAIN):
@@ -31,9 +32,6 @@ class GoveeConfigFlow(ConfigFlow, domain=DOMAIN):
         await self.async_set_unique_id(discovery_info.address)
         self._abort_if_unique_id_configured()
         self._discovery_info = discovery_info
-        self.devices = [
-            f"{discovery_info.address} ({discovery_info.name})"
-        ]
         return await self.async_step_bluetooth_confirm()
 
     async def async_step_bluetooth_confirm(
@@ -50,7 +48,11 @@ class GoveeConfigFlow(ConfigFlow, domain=DOMAIN):
         placeholders = {"name": title}
         self.context["title_placeholders"] = placeholders
         return self.async_show_form(
-            step_id="bluetooth_confirm", description_placeholders=placeholders
+            step_id="bluetooth_confirm", description_placeholders=placeholders, data_schema=vol.Schema(
+                {
+                    vol.Required("type"): vol.In(DEVICE_TYPES)
+                }
+            ),
         )
 
     async def async_step_user(
@@ -81,7 +83,7 @@ class GoveeConfigFlow(ConfigFlow, domain=DOMAIN):
             step_id="user",
             data_schema=vol.Schema(
                 {
-                    vol.Required("type"): vol.In(["Other", "H6053", "H6127"]),
+                    vol.Required("type"): vol.In(DEVICE_TYPES),
                     vol.Required(CONF_ADDRESS): vol.In(self._discovered_devices)
                 }
             ),

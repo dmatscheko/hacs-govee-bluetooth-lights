@@ -1,13 +1,13 @@
 from __future__ import annotations
 
+from homeassistant.const import Platform
 from homeassistant.components import bluetooth
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryNotReady
 
 from .const import DOMAIN
-
-PLATFORMS: list[str] = ["light"]
+from .const import PLATFORMS
 
 class Hub:
     def __init__(self, hass: HomeAssistant, address: str, type: str) -> None:
@@ -36,7 +36,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     hass.data[DOMAIN][entry.entry_id] = Hub(hass, address, entry.data.get("type"))
     hass.async_create_task(
-        hass.config_entries.async_forward_entry_setup(entry, PLATFORMS)
+        hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     )
     return True
 
