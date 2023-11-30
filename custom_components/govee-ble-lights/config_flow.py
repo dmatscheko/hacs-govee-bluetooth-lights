@@ -42,20 +42,17 @@ class GoveeConfigFlow(ConfigFlow, domain=DOMAIN):
         discovery_info = self._discovery_info
         title = discovery_info.name
         if user_input is not None:
-            return self.async_create_entry(title=title, data={
-                "type": user_input["type"]
-            }
-        )
+            return self.async_create_entry(
+                title=title, data={"type": user_input["type"]}
+            )
 
         self._set_confirm_only()
         placeholders = {"name": title}
         self.context["title_placeholders"] = placeholders
         return self.async_show_form(
-            step_id="bluetooth_confirm", description_placeholders=placeholders, data_schema=vol.Schema(
-                {
-                    vol.Required("type"): vol.In(DEVICE_TYPES)
-                }
-            ),
+            step_id="bluetooth_confirm",
+            description_placeholders=placeholders,
+            data_schema=vol.Schema({vol.Required("type"): vol.In(DEVICE_TYPES)}),
         )
 
     async def async_step_user(
@@ -67,9 +64,8 @@ class GoveeConfigFlow(ConfigFlow, domain=DOMAIN):
             await self.async_set_unique_id(address, raise_on_progress=False)
             self._abort_if_unique_id_configured()
             return self.async_create_entry(
-                title=self._discovered_devices[address], data={
-                    "type": user_input["type"]
-                }
+                title=self._discovered_devices[address],
+                data={"type": user_input["type"]},
             )
 
         current_addresses = self._async_current_ids()
@@ -77,7 +73,7 @@ class GoveeConfigFlow(ConfigFlow, domain=DOMAIN):
             address = discovery_info.address
             if address in current_addresses or address in self._discovered_devices:
                 continue
-            self._discovered_devices[address] = (discovery_info.name)
+            self._discovered_devices[address] = discovery_info.name
 
         if not self._discovered_devices:
             return self.async_abort(reason="no_devices_found")
@@ -87,7 +83,7 @@ class GoveeConfigFlow(ConfigFlow, domain=DOMAIN):
             data_schema=vol.Schema(
                 {
                     vol.Required("type"): vol.In(DEVICE_TYPES),
-                    vol.Required(CONF_ADDRESS): vol.In(self._discovered_devices)
+                    vol.Required(CONF_ADDRESS): vol.In(self._discovered_devices),
                 }
             ),
         )

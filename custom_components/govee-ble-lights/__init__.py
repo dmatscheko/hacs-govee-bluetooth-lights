@@ -9,6 +9,7 @@ from homeassistant.exceptions import ConfigEntryNotReady
 from .const import DOMAIN
 from .const import PLATFORMS
 
+
 class Hub:
     def __init__(self, hass: HomeAssistant, address: str, type: str) -> None:
         """Init dummy hub."""
